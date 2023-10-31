@@ -15,6 +15,14 @@ CREATE TABLE Friends (
     FOREIGN KEY (friendID) REFERENCES Users(userID)
 );
 
+CREATE TABLE FriendRequests (
+    requestID INT AUTO_INCREMENT PRIMARY KEY,
+    userID INT,
+    friendID INT,
+    FOREIGN KEY (userID) REFERENCES Users(userID),
+    FOREIGN KEY (friendID) REFERENCES Users(userID)
+);
+
 -- creating user:
 -- INSERT INTO Users (username, password, score1, score2, score3) 
 -- VALUES ('admin', 'csci201', 0, 0, 0);
@@ -28,8 +36,17 @@ CREATE TABLE Friends (
 -- WHERE username = 'admin';
 
 -- retrieving a user's friends list 
--- SELECT U.username AS user, F.friendID, UF.username AS friend
--- FROM Friends F
--- INNER JOIN Users U ON F.userID = U.userID
--- INNER JOIN Users UF ON F.friendID = UF.userID
--- WHERE U.userID = 1;
+-- SELECT f.userID, u.username AS friendUsername
+-- FROM Friends AS f
+-- INNER JOIN Users AS u ON f.friendID = u.userID
+-- WHERE f.userID = (SELECT userID FROM Users WHERE username = 'user');
+
+
+-- checking if a username is a friend of the user: (for requesting a friend) 
+-- SELECT f.friendID, u.username AS friendUsername
+-- FROM Friends AS f
+-- INNER JOIN Users AS u ON f.friendID = u.userID
+-- WHERE f.userID = (SELECT userID FROM Users WHERE username = 'username')
+-- AND u.username = ‘requestedUsername’ ;
+
+
