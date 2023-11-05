@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+    <h1>Welcome to USC Ninjas. Please log in!</h1>
+    <form id="loginForm" action="/group27/Login" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+    <div id="error" style="color: red; display: none;"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginForm = document.getElementById("loginForm");
+
+            loginForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const username = document.querySelector("input[name='username']").value;
+                const password = document.querySelector("input[name='password']").value;
+
+                console.log("Username:", username);
+                console.log("Password:", password);
+
+                if (username === "" || password === "") {
+                    displayErrorMessage("Please fill in username and password.");
+                } else {
+                    submitLoginForm(username, password);
+                }
+            });
+
+            function displayErrorMessage(message) {
+                const errorDiv = document.getElementById("error");
+                errorDiv.textContent = message;
+                errorDiv.style.display = "block";
+            }
+
+            function submitLoginForm(username, password) {
+                console.log("Submitting login form...");
+                fetch("/group27/Login", {
+                    method: "POST",
+                    body: JSON.stringify({ username, password }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Response data:", data);
+                    if (data.authenticated) {
+                        console.log("Authentication successful. Redirecting...");
+                        window.location.href = "dashboard.html"; // Redirect to the dashboard or another page
+                    } else {
+                        displayErrorMessage("Invalid credentials. Username and password combination incorrect. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
